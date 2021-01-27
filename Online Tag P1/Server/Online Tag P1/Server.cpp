@@ -1,24 +1,27 @@
 #include "Server.h"
 
-Server::Server(int PORT, bool BroadcastPublically)
+Server::Server(int t_PORT, bool t_BroadcastPublically)
 {
 	//Start Winsock 
-	WSAData wsaData;
-	WORD DllVersion = MAKEWORD(2, 1);
+	WSAData WinSockData;
+	WORD DllVer = MAKEWORD(2, 1);
 	//if the wsaData is not zero then theres a error
-	if (WSAStartup(DllVersion, &wsaData) != 0)
+	if (WSAStartup(DllVer, &WinSockData) != 0)
 	{
-		MessageBoxA(NULL, "WinSock startup failed", "Error", MB_OK | MB_ICONERROR);
+		MessageBoxA(NULL, "The Winsock failed to start", "Error", MB_OK | MB_ICONERROR);
 		exit(1);
 	}
 	//check server open to public
-	if (BroadcastPublically) 
+	if (t_BroadcastPublically)
+	{
 		m_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	else //else server only for our router
-		//locally broadcasted
-		m_addr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+	}
+	else
+	{
+		m_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	}
 	//Port
-	m_addr.sin_port = htons(PORT); 
+	m_addr.sin_port = htons(t_PORT);
 	//IPv4 Socket
 	m_addr.sin_family = AF_INET; 
 	//socket created to listen for new connections
@@ -26,15 +29,15 @@ Server::Server(int PORT, bool BroadcastPublically)
 	if (bind(m_sListen, (SOCKADDR*)&m_addr, sizeof(m_addr)) == SOCKET_ERROR) 
 	{
 		//Bind address to socket
-		std::string ErrorMsg = "Failed to bind  address to listening socket result Winsock Error:" + std::to_string(WSAGetLastError());
-		MessageBoxA(NULL, ErrorMsg.c_str(), "Error", MB_OK | MB_ICONERROR);
+		std::string ErrorMsg = "Failed to bind  address to listening socket with error" + std::to_string(WSAGetLastError());
+		std::cout << ErrorMsg;
 		exit(1);
 	}
 	//sListen socket is in a state where its listening for incoming connection. 
 	if (listen(m_sListen, SOMAXCONN) == SOCKET_ERROR) 
 	{
-		std::string ErrorMsg = "Failed to listen on listening socket. Winsock Error:" + std::to_string(WSAGetLastError());
-		MessageBoxA(NULL, ErrorMsg.c_str(), "Error", MB_OK | MB_ICONERROR);
+		std::string ErrorMsg = "Could not listen on the listening socket" + std::to_string(WSAGetLastError());
+		std::cout << ErrorMsg;
 		exit(1);
 	}
 	serverptr = this;
@@ -55,20 +58,20 @@ bool Server::ListenForNewConnection()
 	else //otherwise
 	{
 		//ok message
-		std::cout << "Client Connected! ID:" << m_totalConnections << std::endl;
+		std::cout << "Client Connected And ID Is:" << m_totalConnections << std::endl;
 		//set the socket in the array before creating thread
 		m_connections[m_totalConnections] = newConnection; 
 		//Thread created to handle this client. Has a index for this thread of i
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandlerThread, (LPVOID)(m_totalConnections), NULL, NULL);  
-		std::string MOTD = "MOTD: Welcome! This is the message of the day!.";
-		SendString(m_totalConnections, MOTD);
+		std::string message = "";
+		SendGameData(m_totalConnections, message);
 		//add one to the numbver of clients
-		m_totalConnections += 1; 
+		m_totalConnections++; 
 		return true;
 	}
 }
 
-bool Server::sendall(int t_ID, char* t_data, int t_totalbytes)
+bool Server::SendAll(int t_ID, char* t_data, int t_totalbytes)
 {
 	//total bytes sent
 	int bytesSent = 0; 
@@ -79,8 +82,10 @@ bool Server::sendall(int t_ID, char* t_data, int t_totalbytes)
 		int ReturnCheck = send(m_connections[t_ID], t_data + bytesSent, t_totalbytes - bytesSent, NULL); 
 		//check if there was a error
 		if (ReturnCheck == SOCKET_ERROR)
+		{
 			//falied to send return false
-			return false; 
+			return false;
+		}
 		//add return check to total bytes
 		bytesSent += ReturnCheck;
 	}
@@ -89,7 +94,7 @@ bool Server::sendall(int t_ID, char* t_data, int t_totalbytes)
 
 }
 
-bool Server::recvall(int t_ID, char* t_data, int t_totalbytes)
+bool Server::RecieveAll(int t_ID, char* t_data, int t_totalbytes)
 {
 	//has bytes recieved
 	int bytesReceived = 0; 
@@ -99,90 +104,131 @@ bool Server::recvall(int t_ID, char* t_data, int t_totalbytes)
 		//attempt to recieve remaining bytes
 		int ReturnCheck = recv(m_connections[t_ID], t_data + bytesReceived, t_totalbytes - bytesReceived, NULL);
 		//check for error while recieveing bytes
-		if (ReturnCheck == SOCKET_ERROR) 
+		if (ReturnCheck == SOCKET_ERROR)
+		{
 			//then return false if couldnt recieve bytes
-			return false; 
+			return false;
+		}
 		bytesReceived += ReturnCheck;
 	}
 	//return true if successful when recieving bytes
 	return true; 
 }
 
-bool Server::SendInt(int t_ID, int t_int)
+bool Server::SendIntData(int t_ID, int t_int)
 {
-	//Attempt to send int
-	if (!sendall(t_ID, (char*)&t_int, sizeof(int)))
-		//if failed return false else return true
-		return false; 
-	return true; 
+	bool SendState = false;
+	SendState = SendAll(t_ID, (char*)&t_int, sizeof(int));
+	if(SendState)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+
 }
 
-bool Server::GetInt(int t_ID, int& t_int)
+bool Server::GetIntData(int t_ID, int& t_int)
 {
-	//Attempt to recieve int
-	if (!recvall(t_ID, (char*)&t_int, sizeof(int)))
-		//failed to recieve int then return false else return true if successful
-		return false; 
-	return true;
+	bool SendState = false;
+	SendState = RecieveAll(t_ID, (char*)&t_int, sizeof(int));
+	if (SendState)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+		
 }
 
 bool Server::SendPacketType(int t_ID, Packet t_packetType)
 {
-	//try send the packet type
-	if (!sendall(t_ID, (char*)&t_packetType, sizeof(Packet)))
+	bool SendState = false;
+	SendState = SendAll(t_ID, (char*)&t_packetType, sizeof(Packet));
+	if(SendState == false)
+	{
 		//return false if it failed and true if it didnt
-		return false; 
-	return true;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 bool Server::GetPacketType(int t_ID, Packet& t_packettype)
 {
+	bool SendState = false;
 	//attempt to recieve packet
-	if (!recvall(t_ID, (char*)&t_packettype, sizeof(Packet))) 
-		//false returned if it failed to receive packet else if it was succesful then true returned
+	SendState = RecieveAll(t_ID, (char*)&t_packettype, sizeof(Packet));
+	if (SendState)
+	{
+		return true;
+	}
+	else
+	{
 		return false;
-	return true;
+	}
 }
 
-bool Server::SendString(int t_ID, std::string& t_string)
+bool Server::SendGameData(int t_ID, std::string& t_string)
 {
-	if (!SendPacketType(t_ID, ChatMessage))
-		return false; 
+	bool SendState = false;
+	SendState = SendPacketType(t_ID, PlayerData);
 	int bufferlength = t_string.size();
-	if (!SendInt(t_ID, bufferlength))
-		return false; 
-	if (!sendall(t_ID, (char*)t_string.c_str(), bufferlength))
-		return false; 
-	return true; 
+	SendState = SendIntData(t_ID, bufferlength);	
+	SendState = SendAll(t_ID, (char*)t_string.c_str(), bufferlength);
+	if (SendState)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
 
 bool Server::SendPlayerData(int t_ID, std::string& t_string)
 {
-	if (!SendPacketType(t_ID, PlayerData))
-		return false;
+	bool SendState = false;
+	SendState = SendPacketType(t_ID, PlayerData);
 	int bufferlength = t_string.size();
-	if (!SendInt(t_ID, bufferlength))
+	SendState = SendIntData(t_ID, bufferlength);
+	SendState = SendAll(t_ID, (char*)t_string.c_str(), bufferlength);
+	if (SendState)
+	{
+		return true;
+	}
+	else
+	{
 		return false;
-	if (!sendall(t_ID, (char*)t_string.c_str(), bufferlength))
-		return false;
-	return true;
+	}
+
 
 }
-bool Server::GetString(int t_ID, std::string& t_string)
+bool Server::GetThePlayerData(int t_ID, std::string& t_string)
 {
 	//length of buffer
 	int bufferLength; 
 	//get buffer length and store in variable bufferLength
-	if (!GetInt(t_ID, bufferLength)) 
+	if (!GetIntData(t_ID, bufferLength))
+	{
 		//return false if this failes
-		return false; 
+		return false;
+	}
 	//create and assign buffer
 	char* buffer = new char[bufferLength + 1];
 	//last character of the buffer is null to save memory
 	buffer[bufferLength] = '\0'; 
 	//recieve and store message in buffer array
-	if (!recvall(t_ID, buffer, bufferLength)) 
+	if (!RecieveAll(t_ID, buffer, bufferLength))
 	{
 		//delete the buffer if this failed and return false
 		delete[] buffer; 
@@ -194,54 +240,47 @@ bool Server::GetString(int t_ID, std::string& t_string)
 	delete[] buffer;
 	return true;
 }
-bool Server::ProcessPacket(int t_ID, Packet t_packettype)
+bool Server::ProcessPacket(int t_ID, Packet t_packetType)
 {
 	//check the packet type
-	switch (t_packettype)
+	switch (t_packetType)
 	{
 		//if its chat message
-	case ChatMessage: 
+	case PlayerData: 
 	{
 		//create a string to store message
 		std::string message; 
-		//get chat msg and store in variable above
-		if (!GetString(t_ID, message))
+		bool getDataState = false;
+		getDataState = GetThePlayerData(t_ID, message);
+		if(getDataState == false)
+		{
 			//if this failed false returned
-			return false; 
+			return false;
+		}
          //send  message out to each user
 		for (int i = 0; i < m_totalConnections; i++)
 		{
 			//check that the message is the user that sent it
 			if (i == t_ID)
+			{
 				//if it is then skip it so as to not sent message to themself
 				continue;
+			}
 			//send the message to connection at index i
-			if (!SendString(i, message)) 
+			bool sendDataStatus = false;
+			sendDataStatus = SendGameData(i, message);
+			if(sendDataStatus == false)
 			{
-				std::cout << "Failed to send message from client ID: " << t_ID << " to client ID: " << i << std::endl;
+				std::cout << "Could not send data form id: " << t_ID << " to client ID: " << i << std::endl;
 			}
 		}
-		std::cout << "Processed chat message packet from user ID: " << t_ID << std::endl;
+		std::cout << "Recieved data from client with ID: " << t_ID << std::endl;
 		break;
-	}
-	case PlayerData:
-	{
-		std::string message;
-		GetString(t_ID, message);
-		for (int i = 0; i < m_totalConnections; i++)
-		{
-			if (i == t_ID){
-			}
-			else
-			{
-				SendString(i, message);
-			}
-		}
 	}
 	default: //If packet type is not accounted for
 	{
 		//output that packet wasnt found
-		std::cout << "Unrecognized packet: " << t_packettype << std::endl; 
+		std::cout << "The packet was not rigth: " << t_packetType << std::endl;
 		break;
 	}
 	}
@@ -253,17 +292,18 @@ void Server::ClientHandlerThread(int t_ID)
 	Packet packetType;
 	while (true)
 	{
+		bool packetIsOk = false;
 		//get the type of packet
-		if (!serverptr->GetPacketType(t_ID, packetType))
-			//if u cant get type exit loop
-			break; 
-		//then process the packet
-		if (!serverptr->ProcessPacket(t_ID, packetType)) 
-			//if u cant get type exit loop
-			break; 
+		packetIsOk = serverptr->GetPacketType(t_ID, packetType);
+			//then process the packet
+		packetIsOk = serverptr->ProcessPacket(t_ID, packetType);
+		if (packetIsOk == false)
+		{
+			break;
+		}
 	}
 	//output message that states lost connection
-	std::cout << "Lost connection to client ID: " << t_ID << std::endl;
+	std::cout << "Connection was lost with client with a id of:  " << t_ID << std::endl;
 	//close the clients socket at Id
 	closesocket(serverptr->m_connections[t_ID]);
 	return;

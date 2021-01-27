@@ -8,7 +8,6 @@
 
 enum Packet
 {
-	ChatMessage,
 	PlayerData
 };
 
@@ -21,7 +20,7 @@ public:
 	bool SendString(std::string& t_string);
 	bool SendPlayerData(std::string& t_string);
 	bool CloseConnection();
-
+	std::string GetPlayerData();
 	bool ProcessPacket(Packet t_packettype);
 	static void ClientThread();
 	

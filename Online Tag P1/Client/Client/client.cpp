@@ -36,32 +36,6 @@ bool Client::Connect()
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientThread, NULL, NULL, NULL); 
 	return true;
 }
-
-bool Client::SendString(std::string& t_string)
-{
-	//check if the chatmessage can be sent
-	if (!SendPacketType(ChatMessage))
-	{
-		//return false if cannot
-		return false;
-	}
-	//find the length of string buffer
-	int bufferLength = t_string.size(); 
-	//send the length of the string buffer
-	if (!SendInt(bufferLength))
-	{
-		//if failed return false
-		return false;
-	}
-	//try send string buffer
-	if (!SendAll((char*)t_string.c_str(), bufferLength))
-	{
-		//if this failed to send return false if not return true
-		return false;
-	}
-	return true; 
-}
-
 bool Client::SendPlayerData(std::string& t_string)
 {
 	if (!SendPacketType(PlayerData))
@@ -104,24 +78,15 @@ bool Client::CloseConnection()
 	return true;
 }
 
+std::string Client::GetPlayerData()
+{
+	return PlayerDataMsg;
+}
+
 bool Client::ProcessPacket(Packet t_packettype)
 {
 	switch (t_packettype)
 	{
-		case ChatMessage: 
-		{
-			//create string to store message
-			std::string message; 
-			//get the chat message and store in message
-			if (!GetString(message))
-			{
-				//if failed to get cha message the return true
-				return false;
-			}
-			//output the message to the user
-			std::cout << message << std::endl; 
-			break;
-		}
 		case PlayerData:
 		{
 			//get the chat message and store in message
@@ -131,9 +96,10 @@ bool Client::ProcessPacket(Packet t_packettype)
 				return false;
 			}
 			//output the message to the user
-			std::cout << PlayerDataMsg << std::endl;
+		    std::cout << " GG " << PlayerDataMsg << std::endl;
 			break;
 		}
+		
 	    //if the packet wasnt found output message
 		default:
 			std::cout << "packet is not recognised: " << t_packettype << std::endl; 

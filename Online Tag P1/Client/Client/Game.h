@@ -2,6 +2,7 @@
 #define GAME
 
 #include <SFML/Graphics.hpp>
+#include <sstream>
 #include "Globals.h"
 #include "client.h"
 #include "Player1.h"
@@ -14,6 +15,7 @@ public:
 	void run();
 private:
 	Player1 playerOne;
+	Player1 playerTwo;
 	Client *client1;
 	//Game Loop
 	void processEvents();
@@ -27,7 +29,7 @@ private:
 	//Screens
 	sf::RenderWindow m_window;
 
-
+	sf::Vector2f m_Player2Position;
 	bool m_exitGame;
 };
 

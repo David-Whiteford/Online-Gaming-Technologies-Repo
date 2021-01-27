@@ -8,12 +8,14 @@ Player1::~Player1()
 {
 }
 
-void Player1::setUp()
+void Player1::setUp(sf::Color t_color, sf::Vector2f t_pos, bool t_playerOne)
 {
+
 	player.setRadius(10);
-	player.setOutlineColor(sf::Color::Green);
+	player.setOutlineColor(t_color);
 	player.setOutlineThickness(5);
-	player.setPosition(10, 20);
+	player.setPosition(t_pos);
+	playerOne = t_playerOne;
 }
 
 void Player1::draw(sf::RenderWindow& t_window)
@@ -21,12 +23,19 @@ void Player1::draw(sf::RenderWindow& t_window)
 	t_window.draw(player);
 }
 
-void Player1::update()
+void Player1::update(sf::Vector2f t_pos)
 {
-	move();
+	if (playerOne == true)
+	{
+		movePlayer1();
+	}
+	else 
+	{
+		movePlayer2(t_pos);
+	}
 }
 
-void Player1::move()
+void Player1::movePlayer1()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
@@ -49,4 +58,9 @@ void Player1::move()
 		pos.y += 1.0f;
 	}
 	player.setPosition(pos);
+}
+
+void Player1::movePlayer2(sf::Vector2f t_pos)
+{
+	player.setPosition(t_pos);
 }

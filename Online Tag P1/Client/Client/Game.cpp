@@ -11,6 +11,8 @@ Game::Game() : m_window{ sf::VideoMode{ SCREEN_WIDTH, SCREEN_HEIGHT, 32 }, "Onli
 		std::cout << "Failed connection to the server" << std::endl;
 	}
 
+
+
 }
 
 Game::~Game()
@@ -57,9 +59,25 @@ void Game::processEvents()
 
 void Game::update(sf::Time t_deltaTime)
 {
-	std::string playerdata = "I AM AWSOME";
-	client1->SendPlayerData(playerdata);
-	playerOne.update();
+	float xVal = playerOne.getPosition().x;
+	std::ostringstream stringStreamPlayer1X;
+	stringStreamPlayer1X << xVal;
+	float yVal = playerOne.getPosition().y;
+	std::ostringstream stringStreamPlayer1Y;
+	stringStreamPlayer1Y << yVal;
+	std::string s(stringStreamPlayer1X.str() + " " + stringStreamPlayer1Y.str());
+	client1->SendPlayerData(s);
+	//std::cout << client1->GetPlayerData();
+
+	std::string playerTwoData = client1->GetPlayerData();
+	std::istringstream iss{ playerTwoData };
+	float x{}, y{};
+	iss >> x >> y;
+	std::cout << "x: " << x << "y:" << y << std::endl;
+	m_Player2Position = sf::Vector2f(x, y);
+	
+	playerOne.update(sf::Vector2f(0,0));
+	playerTwo.update(m_Player2Position);
 	if (m_exitGame)
 	{
 		m_window.close();
@@ -70,11 +88,13 @@ void Game::render()
 {
 	m_window.clear(sf::Color(0, 0, 0, 0));
 	playerOne.draw(m_window);
+	playerTwo.draw(m_window);
 	m_window.display();
 }
 
 void Game::setupAssets()
 {
-	playerOne.setUp();
+	playerOne.setUp(sf::Color::Green,sf::Vector2f(rand() % 100, rand() % 100) , true);
+	playerTwo.setUp(sf::Color::Red, sf::Vector2f(50, 20) , false);
 
 }

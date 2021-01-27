@@ -8,32 +8,30 @@
 
 enum Packet
 {
-	ChatMessage,
-	Test,
 	PlayerData
 };
 
 class Server
 {
 public:
-	Server(int PORT, bool t_broadcastPublically = false);
+	Server(int t_PORT, bool t_BroadcastPublically = false);
 	bool ListenForNewConnection();
 
 private:
-	bool sendall(int t_ID, char* t_data, int t_totalbytes);
-	bool recvall(int t_ID, char* t_data, int t_totalbytes);
+	bool SendAll(int t_ID, char* t_data, int t_totalbytes);
+	bool RecieveAll(int t_ID, char* t_data, int t_totalbytes);
 
-	bool SendInt(int t_ID, int t_int);
-	bool GetInt(int t_ID, int& t_int);
+	bool SendIntData(int t_ID, int t_int);
+	bool GetIntData(int t_ID, int& t_int);
 
 	bool SendPacketType(int t_ID, Packet t_packettype);
 	bool GetPacketType(int t_ID, Packet& t_packettype);
 
-	bool SendString(int t_ID, std::string& t_string);
+	bool SendGameData(int t_ID, std::string& t_string);
 	bool SendPlayerData(int t_ID, std::string& t_string);
-	bool GetString(int t_ID, std::string& t_string);
+	bool GetThePlayerData(int t_ID, std::string& t_string);
 
-	bool ProcessPacket(int t_ID, Packet t_packettype);
+	bool ProcessPacket(int t_ID, Packet t_packetType);
 
 	static void ClientHandlerThread(int t_ID);
 

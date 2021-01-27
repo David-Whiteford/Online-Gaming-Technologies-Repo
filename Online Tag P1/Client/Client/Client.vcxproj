@@ -128,11 +128,13 @@
     <ClInclude Include="client.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Player1.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player1.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

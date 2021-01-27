@@ -126,10 +126,10 @@ bool Server::GetInt(int t_ID, int& t_int)
 	return true;
 }
 
-bool Server::SendPacketType(int t_ID, Packet t_packettype)
+bool Server::SendPacketType(int t_ID, Packet t_packetType)
 {
 	//try send the packet type
-	if (!sendall(t_ID, (char*)&t_packettype, sizeof(Packet))) 
+	if (!sendall(t_ID, (char*)&t_packetType, sizeof(Packet)))
 		//return false if it failed and true if it didnt
 		return false; 
 	return true;
@@ -146,24 +146,29 @@ bool Server::GetPacketType(int t_ID, Packet& t_packettype)
 
 bool Server::SendString(int t_ID, std::string& t_string)
 {
-	//Send packet type: Chat Message, If sending packet type fails...
-	if (!SendPacketType(t_ID, P_ChatMessage)) 
-		//failed to send string
-		return false;
-	//find the strings buffers lenghth
-	int bufferlength = t_string.size(); 
-	//Send length of  the string buffer
-	if (!SendInt(t_ID, bufferlength)) 
-		//return false if failed to sent string buffer length
+	if (!SendPacketType(t_ID, ChatMessage))
 		return false; 
-	//try send string buffer
-	if (!sendall(t_ID, (char*)t_string.c_str(), bufferlength)) 
-		//failerd to send string buffer
-		return false;
-	//sent string buffer
+	int bufferlength = t_string.size();
+	if (!SendInt(t_ID, bufferlength))
+		return false; 
+	if (!sendall(t_ID, (char*)t_string.c_str(), bufferlength))
+		return false; 
 	return true; 
 }
 
+
+bool Server::SendPlayerData(int t_ID, std::string& t_string)
+{
+	if (!SendPacketType(t_ID, PlayerData))
+		return false;
+	int bufferlength = t_string.size();
+	if (!SendInt(t_ID, bufferlength))
+		return false;
+	if (!sendall(t_ID, (char*)t_string.c_str(), bufferlength))
+		return false;
+	return true;
+
+}
 bool Server::GetString(int t_ID, std::string& t_string)
 {
 	//length of buffer
@@ -189,14 +194,13 @@ bool Server::GetString(int t_ID, std::string& t_string)
 	delete[] buffer;
 	return true;
 }
-
 bool Server::ProcessPacket(int t_ID, Packet t_packettype)
 {
 	//check the packet type
 	switch (t_packettype)
 	{
 		//if its chat message
-	case P_ChatMessage: 
+	case ChatMessage: 
 	{
 		//create a string to store message
 		std::string message; 
@@ -220,7 +224,20 @@ bool Server::ProcessPacket(int t_ID, Packet t_packettype)
 		std::cout << "Processed chat message packet from user ID: " << t_ID << std::endl;
 		break;
 	}
-
+	case PlayerData:
+	{
+		std::string message;
+		GetString(t_ID, message);
+		for (int i = 0; i < m_totalConnections; i++)
+		{
+			if (i == t_ID){
+			}
+			else
+			{
+				SendString(i, message);
+			}
+		}
+	}
 	default: //If packet type is not accounted for
 	{
 		//output that packet wasnt found

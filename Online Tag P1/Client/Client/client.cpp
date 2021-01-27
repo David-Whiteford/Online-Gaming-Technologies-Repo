@@ -62,6 +62,30 @@ bool Client::SendString(std::string& t_string)
 	return true; 
 }
 
+bool Client::SendPlayerData(std::string& t_string)
+{
+	if (!SendPacketType(PlayerData))
+	{
+		return false;
+	}
+	//find the length of string buffer
+	int bufferLength = t_string.size();
+	//send the length of the string buffer
+	if (!SendInt(bufferLength))
+	{
+		//if failed return false
+		return false;
+	}
+	//try send string buffer
+	if (!SendAll((char*)t_string.c_str(), bufferLength))
+	{
+		//if this failed to send return false if not return true
+		return false;
+	}
+	return true;
+
+}
+
 bool Client::CloseConnection()
 {
 	if (closesocket(m_connection) == SOCKET_ERROR)
@@ -96,6 +120,18 @@ bool Client::ProcessPacket(Packet t_packettype)
 			}
 			//output the message to the user
 			std::cout << message << std::endl; 
+			break;
+		}
+		case PlayerData:
+		{
+			//get the chat message and store in message
+			if (!GetString(PlayerDataMsg))
+			{
+				//if failed to get cha message the return true
+				return false;
+			}
+			//output the message to the user
+			std::cout << PlayerDataMsg << std::endl;
 			break;
 		}
 	    //if the packet wasnt found output message
@@ -191,7 +227,7 @@ bool Client::RecieveAll(char* t_data, int t_totalbytes)
 	while (bytesReceived < t_totalbytes) 
 	{
 		//try and to recieve bytes
-		int returnCheck = recv(m_connection, t_data + bytesReceived, t_totalbytes - bytesReceived, NULL); 
+		int returnCheck = recv(m_connection, t_data, t_totalbytes - bytesReceived, NULL); 
 		//socket error while trying to recieve bytes
 		if (returnCheck == SOCKET_ERROR)
 		{

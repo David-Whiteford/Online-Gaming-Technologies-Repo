@@ -1,14 +1,16 @@
 #pragma once
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #pragma comment(lib,"ws2_32.lib")
+
 #include <WinSock2.h>
 #include <string>
 #include <iostream>
 
 enum Packet
 {
-	P_ChatMessage,
-	P_Test
+	ChatMessage,
+	Test,
+	PlayerData
 };
 
 class Server
@@ -28,6 +30,7 @@ private:
 	bool GetPacketType(int t_ID, Packet& t_packettype);
 
 	bool SendString(int t_ID, std::string& t_string);
+	bool SendPlayerData(int t_ID, std::string& t_string);
 	bool GetString(int t_ID, std::string& t_string);
 
 	bool ProcessPacket(int t_ID, Packet t_packettype);

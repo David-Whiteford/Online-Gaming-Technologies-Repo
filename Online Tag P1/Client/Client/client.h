@@ -9,7 +9,7 @@
 enum Packet
 {
 	ChatMessage,
-	Test
+	PlayerData
 };
 
 class Client
@@ -17,18 +17,17 @@ class Client
 public:
 	Client(std::string t_IP, int t_PORT);
 	bool Connect();
-
+	
 	bool SendString(std::string& t_string);
+	bool SendPlayerData(std::string& t_string);
 	bool CloseConnection();
-private: 
+
 	bool ProcessPacket(Packet t_packettype);
 	static void ClientThread();
 	
 	bool SendAll(char* t_data, int t_totalbytes);
 	bool SendInt(int t_int);
 	bool SendPacketType(Packet t_packettype);
-
-
 	
 	bool RecieveAll(char* t_data, int t_totalbytes);
 	bool GetInt(int& t_int);
@@ -39,6 +38,7 @@ private:
 	SOCKET m_connection;
 	SOCKADDR_IN m_addr;
 	int m_sizeOfAddr = sizeof(m_addr); 
+	std::string PlayerDataMsg;
 };
 
 static Client* clientptr; 

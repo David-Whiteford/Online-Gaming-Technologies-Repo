@@ -77,7 +77,7 @@ void Game::update(sf::Time t_deltaTime)
 	//pass in the player 2 positions
 	m_Player2Position = sf::Vector2f(x, y);
 	playerOne.update(sf::Vector2f(0,0));
-	//playerTwo.update(m_Player2Position);
+	playerTwo.update(m_Player2Position);
 	if (m_exitGame)
 	{
 		m_window.close();

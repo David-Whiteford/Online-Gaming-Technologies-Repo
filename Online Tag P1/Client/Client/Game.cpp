@@ -4,6 +4,8 @@ Game::Game() : m_window{ sf::VideoMode{ SCREEN_WIDTH, SCREEN_HEIGHT, 32 }, "Onli
 {
 
 	setupAssets();
+	playerOne.setTagged(true);
+	playerTwo.setTagged(false);
 	client1 = new Client("127.0.0.1", 1111);
 	if (!client1->Connect())
 	{
@@ -78,6 +80,21 @@ void Game::update(sf::Time t_deltaTime)
 	m_Player2Position = sf::Vector2f(x, y);
 	playerOne.update(sf::Vector2f(0,0));
 	playerTwo.update(m_Player2Position);
+	//if (playerOne.playersCollision(m_Player2Position)== true && playerOne.getTagged() == true)
+	//{
+	//	playerTwo.setPosition(sf::Vector2f(500, 10));
+	//	playerOne.setPosition(sf::Vector2f(10, 10));
+	//	playerTwo.setTagged(true);
+	//	
+	//}
+	//else if (playerOne.playersCollision(m_Player2Position) == true && playerTwo.getTagged() == true)
+	//{
+	//	playerTwo.setPosition(sf::Vector2f(500, 10));
+	//	playerOne.setPosition(sf::Vector2f(10, 10));
+	//	playerOne.setTagged(true);
+	//}
+	std::cout << "COL: " << playerOne.playersCollision(m_Player2Position);
+
 	if (m_exitGame)
 	{
 		m_window.close();
@@ -95,7 +112,7 @@ void Game::render()
 void Game::setupAssets()
 {
 	//set up the players
-	playerOne.setUp(sf::Color::Green,sf::Vector2f(rand() % 100, rand() % 100) , true);
-	playerTwo.setUp(sf::Color::Red, sf::Vector2f(50, 20) , false);
+	playerOne.setUp(sf::Color::Green,sf::Vector2f(10,20) , true);
+	playerTwo.setUp(sf::Color::Red, sf::Vector2f(200, 20) , false);
 
 }

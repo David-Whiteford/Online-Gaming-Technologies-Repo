@@ -289,6 +289,7 @@ bool Server::ProcessPacket(int t_ID, Packet t_packetType)
 
 void Server::ClientHandlerThread(int t_ID)
 {
+	//set the packet type
 	Packet packetType;
 	while (true)
 	{

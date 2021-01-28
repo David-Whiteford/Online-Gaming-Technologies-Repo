@@ -1,13 +1,13 @@
 ﻿  Game.cpp
 D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Globals.h(11,38): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,69): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,69): warning C4244:         with
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,69): warning C4244:         [
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,69): warning C4244:             T=float
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,69): warning C4244:         ]
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,55): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,55): warning C4244:         with
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,55): warning C4244:         [
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,55): warning C4244:             T=float
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(97,55): warning C4244:         ]
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,69): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,69): warning C4244:         with
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,69): warning C4244:         [
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,69): warning C4244:             T=float
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,69): warning C4244:         ]
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,55): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,55): warning C4244:         with
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,55): warning C4244:         [
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,55): warning C4244:             T=float
+D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Game.cpp(98,55): warning C4244:         ]
   Client.vcxproj -> D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Debug\Client.exe

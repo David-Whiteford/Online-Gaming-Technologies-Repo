@@ -74,8 +74,8 @@ void Game::update(sf::Time t_deltaTime)
 	float x{}, y{};
 	iss >> x >> y;
 	std::cout << "x: " << x << "y:" << y << std::endl;
+	//pass in the player 2 positions
 	m_Player2Position = sf::Vector2f(x, y);
-	
 	playerOne.update(sf::Vector2f(0,0));
 	playerTwo.update(m_Player2Position);
 	if (m_exitGame)
@@ -94,6 +94,7 @@ void Game::render()
 
 void Game::setupAssets()
 {
+	//set up the players
 	playerOne.setUp(sf::Color::Green,sf::Vector2f(rand() % 100, rand() % 100) , true);
 	playerTwo.setUp(sf::Color::Red, sf::Vector2f(50, 20) , false);
 

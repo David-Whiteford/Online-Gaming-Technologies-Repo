@@ -4,7 +4,7 @@ Game::Game() : m_window{ sf::VideoMode{ SCREEN_WIDTH, SCREEN_HEIGHT, 32 }, "Onli
 {
 
 	setupAssets();
-	client1 = new Client("127.0.0.1", 1111);
+	client1 = new Client("192.168.1.7", 1111);
 	if (!client1->Connect())
 	{
 		//output message if failed to connect to server and pause system

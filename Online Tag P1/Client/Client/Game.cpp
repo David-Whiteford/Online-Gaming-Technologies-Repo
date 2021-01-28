@@ -4,7 +4,7 @@ Game::Game() : m_window{ sf::VideoMode{ SCREEN_WIDTH, SCREEN_HEIGHT, 32 }, "Onli
 {
 
 	setupAssets();
-	client1 = new Client("192.168.1.5", 1111);
+	client1 = new Client("192.168.1.3", 1111);
 	if (!client1->Connect())
 	{
 		//output message if failed to connect to server and pause system
@@ -77,7 +77,7 @@ void Game::update(sf::Time t_deltaTime)
 	//pass in the player 2 positions
 	m_Player2Position = sf::Vector2f(x, y);
 	playerOne.update(sf::Vector2f(0,0));
-	playerTwo.update(m_Player2Position);
+	//playerTwo.update(m_Player2Position);
 	if (m_exitGame)
 	{
 		m_window.close();

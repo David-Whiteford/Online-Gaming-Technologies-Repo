@@ -10,7 +10,6 @@ Player1::~Player1()
 
 void Player1::setUp(sf::Color t_color, sf::Vector2f t_pos, bool t_playerOne)
 {
-
 	player.setRadius(10);
 	player.setOutlineColor(t_color);
 	player.setOutlineThickness(5);

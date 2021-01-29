@@ -1,3 +1,8 @@
-﻿  Game.cpp
-D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Globals.h(11,38): warning C4305: 'initializing': truncation from 'double' to 'float'
-  Client.vcxproj -> D:\Users\dave2\Desktop\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Debug\Client.exe
+﻿  client.cpp
+  Game.cpp
+  main.cpp
+D:\Users\dave2\Desktop\New folder (2)\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Globals.h(11,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Player1.cpp
+  Generating Code...
+D:\Users\dave2\Desktop\New folder (2)\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Client\Globals.h(11,38): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Client.vcxproj -> D:\Users\dave2\Desktop\New folder (2)\Online-Gaming-Technologies-Repo\Online Tag P1\Client\Debug\Client.exe

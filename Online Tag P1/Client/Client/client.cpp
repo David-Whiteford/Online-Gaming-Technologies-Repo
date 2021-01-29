@@ -96,7 +96,7 @@ bool Client::ProcessPacket(Packet t_packettype)
 				return false;
 			}
 			//output the message to the user
-		    std::cout << " GG " << PlayerDataMsg << std::endl;
+		    std::cout << "Player Pos and Tagged Bool " << PlayerDataMsg << std::endl;
 			break;
 		}
 		

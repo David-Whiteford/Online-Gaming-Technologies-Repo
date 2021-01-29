@@ -15,7 +15,9 @@ public:
 	void setPosition(sf::Vector2f t_pos){
 		player.setPosition(t_pos);
 	}
-	
+	void setColor(sf::Color t_color){
+		player.setFillColor(t_color);
+	}
 	sf::Vector2f getPosition()
 	{
 		return player.getPosition();

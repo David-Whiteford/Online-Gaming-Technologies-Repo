@@ -8,7 +8,7 @@ int main()
 	for (int i = 0; i < 100; i++) 
 	{
 		//create and accept up to 100 connections
-		MyServer.ListenForNewConnection(); 
+		MyServer.listenForNewConnection(); 
 	}
 	system("pause");
 	return 0;

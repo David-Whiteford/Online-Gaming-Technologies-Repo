@@ -28,7 +28,8 @@ private:
 
 	//Screens
 	sf::RenderWindow m_window;
-
+	bool playerOneTagged = false;
+	bool m_collision = false;
 	sf::Vector2f m_Player2Position;
 	bool m_exitGame;
 };
